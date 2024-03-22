@@ -1,0 +1,44 @@
+<JavaNetwork.txt>
+
+프로토콜 (protocol)
+- 프로토콜은 다양한 네트워크 장치들이 서로 데이터를 교환할 수 있는 약속이다
+
+
+#TCP (Transmission Control Protocol)
+-연결 지향 프로토콜
+
+#UDP (User Datagram Protocol)
+-비연결 지향 프로토콜
+
+#IP (Internet Protocol)
+-인터넷에 연결된 모든 통신망과 그 통신망에 연결된 컴퓨터에 부여하는 고유의 식별 주소
+
+#DNS (Domain Name System)
+- URL 을 IP주소로 변환하는 서버
+
+#PORT
+- 통신하는 프로그램 간에 사용되는 연결 포트
+  IP 주소는 네트워크 상의 컴퓨터 또는 시스템을 식별하는 주소이고,
+  포트번호를 이용하고 통신할 응용 프로그램ㅇ을 식별한다
+
+#java.net
+- 네트워크 프로그램을 작성하기 위한 class입니다.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
