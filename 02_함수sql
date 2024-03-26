@@ -1,0 +1,271 @@
+/* ch02 _함수.sql
+*/
+show user;
+
+/*
+# 함수
+- 단일의 함수 : 여러건의 데이터를 한번에 하나씩만 처리하는 함수
+- 여러행 함수 : 여러건의 데이터를 입력받아서 결과값 한건을 만들어주는 함수
+*/
+
+-- DUAL 테이블
+-- > 한행으로 결과를 툴력하기 위한 테이블 입니다
+SELECT 23*12
+FROM DUAL;
+
+--DUAL 테이블은 DUMMY라는 하나의 컬럼으로 구성되어있음
+DESC DUAL;
+
+--DUAL 테이블은 DUMMY라는 하나의 컬럼에 X라는 하나의 로우만을 저장하고있지만 의미없는 값이다
+SELECT * FROM DUAL;
+
+/*
+# 숫자 함수
+*/
+
+-- ABS : 절댓값을 구하는 함수
+SELECT -10, ABS(-10)
+FROM DUAL;
+
+-- FLOOR : 소숫점 아래를 버리는 함수
+SELECT 10.123, ABS(10.123)
+FROM DUAL;
+
+-- ROUND : 반올림하는 함수
+SELECT 34.5678, ROUND(34.5678), ROUND(34.5678, 3)
+FROM DUAL;
+
+--TRUNC : 지정한 자릿수 이하를 버린 결과
+SELECT TRUNC(34.5678, 2), TRUNC(34.5678)
+FROM DUAL;
+
+-- MOD : 나눗셈 연산을 한 후에 나온 나머지를 구하는 함수
+SELECT MOD(10, 3), MOD(10, 4)
+FROM DUAL;
+
+
+/*
+#문자 함수
+*/
+
+-- UPPER : 대문자로 변환하는 함수
+SELECT 'Hello Oracle', UPPER('Hello Oracle')
+FROM DUAL;
+
+-- LOWER : 소문자로 변환하는 함수
+SELECT 'Hello Oracle', LOWER('Hello Oracle')
+FROM DUAL;
+
+-- INITCAP : 문자열의 이니셜만 대문자로 변경
+SELECT 'hello oracle', INITCAP('hello oracle')
+FROM DUAL; 
+
+-- LENGTH : 컬럼에 저장된 데이터의 값이 몇개의 문자로 되어있는지 계산
+SELECT LENGTH('ORACLE'), LENGTH('오라클')
+FROM DUAL;
+
+-- LENGTHB : 문자열의 길이를 byte단위로 처리
+SELECT LENGTH('ORACLE'), LENGTH('오라클')
+FROM DUAL;
+
+-- SUBSTR : 문자열의 시작 위치부터 선택 갯수만큼의 문자를 추출
+-- > SUBSTR(대상, 시작위치, 추출할 갯수)
+-- 오라클에서 index는 1부터 시작
+SELECT SUBSTR('oracle string test', 8, 6)
+FROM DUAL;
+
+-- 시작위치값에 음수를 적용할수있는데 
+-- 이때에는 문자열 마지막에서 부터 시작위치가 적용
+SELECT SUBSTR('oracle string test', -4, 4)
+FROM DUAL;
+
+-- 12월에 입사한 사원을 출력
+SELECT *
+FROM EMP
+WHERE SUBSTR(hiredate, 4, 2)='12';
+
+-- INSTR :  특정문자가 있는 위치를 알려줌
+-- > INSTR(대상, 검색글자, 시작위치, 몇번째 검색)
+SELECT INSTR('step by step', 't')
+FROM DUAL;
+
+SELECT INSTR('step by step', 'e', 2, 2)
+FROM DUAL;
+
+SELECT INSTR('데이터베이스', '이', 3)
+FROM DUAL;
+
+-- LPAD : 대상 문자열을 명시된 자릿수에서 오른쪽에 표시하고, 남은 왼쪽 자리들은 기호로 채움
+-- > LPAD(대상, 자릿수, 기호)
+SELECT LPAD('padding', 10, '#')
+FROM DUAL;
+
+-- LTRIM : 문자열 왼쪽(앞)의 공백문자를 제거함
+SELECT LTRIM('               TRIM TEST         ')
+FROM DUAL;
+
+-- RTRIM : 문자열 오른쪽(뒤)의 공백문자를 제거함
+SELECT RTRIM('               TRIM TEST         ')
+FROM DUAL;
+
+
+/*
+# 날짜 함수
+*/
+
+-- SYSDATE
+-- 시스템의 현재 날짜를 반환하는 함수
+SELECT SYSDATE
+FROM DUAL;
+
+-- 날짜 연산 : 날짜 + 숫자 = 해당날짜로부터 그 기간만큼 지난 날짜
+--             날짜 - 숫자 = 해당날짜로부터 그 기간만큼 이전 날짜
+--             날짜 - 날짜 = 두 날짜 사이의 기간을 계산
+SELECT SYSDATE-1 어제, SYSDATE 오늘, SYSDATE+2 모래
+FROM DUAL;
+
+-- ROUND 에 포멧 모델 날짜를 사용해서, 날짜를 반올림할수있음
+-- > 포멧 모델        단위
+--   DDD              일 단위 기준
+--   HH               시간 단위 기준
+--   MONTH            원단위 기준(16일 기준)
+
+--   emp 테이블의 입사일자를 월을 기준으로 반올림
+SELECT ename, hiredate, ROUND(hiredate, 'month')
+FROM EMP;
+
+-- TRUNC 함수에 포멧 형식을 사용해서 날짜를 잘라낼수있다
+
+-- emp 테이블의 입사일자의 월을 기준으로 날짜 자르기
+SELECT ename, hiredate, TRUNC(hiredate, 'month')
+FROM EMP;
+
+-- MONTHS_BETWEEN
+-- 날짜와 날짜 사이릐 개월수를 구함
+-- > MONTHS_BETWEEN( data_1, data_2 )
+
+-- 근무 개월수
+SELECT ename, SYSDATE, hiredate, MONTHS_BETWEEN( SYSDATE, hiredate)
+FROM EMP;
+
+SELECT ename, SYSDATE, hiredate, TRUNC(MONTHS_BETWEEN( SYSDATE, hiredate))
+FROM EMP;
+
+-- ADD_MONTHS
+-- 특정 개월수를 더한 날짜를 구함
+-- > ADD_MONTHS(data, monber)
+
+--입사일에 5개월을 더한 날짜
+SELECT ename, hiredate, ADD_MONTHS( hiredate, 5)
+FROM EMP;
+
+-- NEXT_DAY
+-- 날짜를 기준으로 최초로 돌아오는 요일에 해당하는 날짜를 반환하는 함수
+-- > NEXT_DAY(data, 요일)
+
+-- 오늘을 기준으로 최초로 돌아오는 월요일
+SELECT SYSDATE, NEXT_DAY(SYSDATE, '월요일')
+FROM DUAL;
+
+-- LAST_DAY
+-- 해당날짜가 속한달의 마지막 날짜를 반환하는 함수
+
+--입사한 달의 마지막 날
+SELECT hiredate, LAST_DAY(hiredate)
+FROM EMP;
+
+/*
+#형변환 함수
+- 숫자, 문자, 날짜의 데이터타입을 다른 데이터 타입으로 변환
+- TO_CHAR   : 날짜 또는 숫자타입을 문자로 변환
+  TO_DATE   : 문자 타입을 날짜 타입으로 변환
+  TO_NUMBER : 문자 타입을 숫자 타입으로 변환
+*/
+
+/*
+- TO_CHAR (날짜 데이터, '출력 형식')
+- 출력형식 종류    의미
+- YYYY             년도(4자리)
+- YY               년도(2자리)
+- MM               월을 숫자로 표현
+- MON              월을 알파벳으로 표현
+- DAY              요일 표현
+*/
+
+-- 현재 날짜를 다른 형태로 출력
+SELECT SYSDATE, TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+FROM DUAL;
+
+-- emp 테이블 사원 입사일의 요일 출력
+SELECT hiredate, TO_CHAR(hiredate, 'YYYY.MM.DD. DAY')
+FROM EMP;
+
+/*
+# 시간 종류 출력    의미
+  AM or PM          오전(AM), 오후(PM)
+  HH or HH12        시간(1 ~ 12)
+  HH24              24시간
+  MI                분
+  SS                초 
+*/
+
+-- 현재 날짜와 시간 출력
+SELECT TO_CHAR(SYSDATE, YYYY-MM-DD AM HH24:MI:SS') AS "현재시간"
+FROM DUAL;
+
+/*
+# 숫자 출력 방식
+- 구분  의미
+   0    자릿수를 나타내며 자릿수가 맞지않으면 0으로 채운다
+   9    자릿수를 나타내며 자릿수가 맞지않으면 0으로 채우지 않는다
+   .    소수점
+   ,    천단위 자리 구분
+*/
+
+-- 숫자를 문자 형태로 변환
+SELECT TO_CHAR(12300)
+FROM DUAL;
+
+-- 자리 채우기
+SELECT TO_CHAR(12345, '0000000'), TO_CHAR(12345, '9999999')
+FROM DUAL;
+
+-- 통화기호를 붙이면서, 천단위마다 ',' 출력
+SELECT ename, sal, TO_CHAR(sal, '999,999L')
+FROM EMP:
+
+/*
+# TO_DATE
+- 문자열을 날짜 형식으로 변환
+- TO_DATE('문자' , 'format')
+*/
+
+-- 숫자를 날짜형으로 변환
+SELECT ename, hiredate
+FROM EMP
+WHERE hiredate=TO_DATE(19801217, 'YYYYMMDD');
+
+/*
+TO_NUMBER
+-데이터를 숫자형으로 변환
+*/
+
+SELECT TO_NUMBER('20,000', '99,999')-TO_NUMBER('12,000', '99,999')
+FROM DUAL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
