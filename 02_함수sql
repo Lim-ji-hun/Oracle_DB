@@ -232,7 +232,7 @@ FROM DUAL;
 
 -- 통화기호를 붙이면서, 천단위마다 ',' 출력
 SELECT ename, sal, TO_CHAR(sal, '999,999L')
-FROM EMP:
+FROM EMP;
 
 /*
 # TO_DATE
