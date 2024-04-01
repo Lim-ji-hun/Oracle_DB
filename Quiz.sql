@@ -1,65 +1,44 @@
-/* quiz */
-SELECT *
-FROM EMP;
--- emp 테이블에서 사원번호가 홀수인 사원을 출력하세요
-SELECT *
-FROM EMP
-WHERE MOD(empno, 2)=1;
+-- 1. test 계정을 생성하세요   
+CREATE USER test IDENTIFIED BY test;
+SELECT * FROM ALL_USERS;
+DROP USER test CASCADE;
 
--- emp 테이블에서 소문자 manager 로 직급을 검색해서 출력하세요
-SELECT *
-FROM EMP
-WHERE job=UPPER('manager');
+-- test 계정에 접속, 데이터 작업 권한 롤을 부여하세요
+GRANT connect, resource, dba TO test;
 
--- emp 테이블에서 조회하는 이름을 소문자로 사용해서, 사원번호, 이름, 직급, 부서번호를 출력하세요
-SELECT empno, ename, job, deptno
-FROM EMP
-WHERE LOWER(ename)='smith';
+-- test 계정에 tabllespace를 users 로 설정하세요
+-- test 계정의 tablespace 사용 용량을 제한 없음으로 설정하세요
+ALTER USER test DEFAULT TABLESPACE USERS QUOTA UNLIMITED ON USERS;
+ 
 
--- dept 테이블에서 첫글자만 대문자로 변환하여 모든 정보를 출력하세요
-SELECT deptno, INITCAP(dname), INITCAP(loc)
-FROM DEPT;
+-- 2. test 계정에 회원 정보 테이블(member) 생성
+-- 회원수 - 시퀀스 적용
+-- 회원 ID - (중복 X, 유일키)
+-- 회원이름 - null 값 사용불가
+-- 회원나이
+-- 회원키 - 전체 10자리, 소수점 2번째 자리까지
+-- 생성일자
+CREATE TABLE MEMBER(
+num NUMBER,
+id VARCHAR2(10) PRIMARY KEY,
+name VARCHAR2(10)  NOT NULL,
+old NUMBER,
+height NUMBER(10, 2),
+cret DATE
+);
 
--- emp 테이블의 ename 컬럼의 마지막 문자 하나만 추출해서 이름이 E 로 끝나는 사원을 출력하세요
-SELECT *
-FROM EMP
-WHERE SUBSTR(ename, -1, 1)='E';
+DROP TABLE MEMBER;
 
--- emp 테이블에서 이름의 세번째 자리가 R 인 사원을 출력하세요
-SELECT *
-FROM EMP
-WHERE SUBSTR(ename, 3, 1)='R';
+-- 3. 회원 정보 테이블(member)의 항목을 확인
+SELECT * FROM MEMBER;
 
--- emp 테이블에서 20번 부서의 사원번호, 이름, 이름의 글자수, 급여, 급여의 자릿수를 출력하세요
-SELECT empno, ename, LENGTH(ename), sal, LENGTH(sal)
-FROM EMP
-WHERE deptno=20;
+-- 4. 회원 정보 테이블(member)의 회원수에 사용하는 시퀀스 객체 생성
+CREATE SEQUENCE MEMBER_num NOCACHE NOCYCLE;
+DROP SEQUENCE MEMBER_num;
 
--- emp 테이블에서 현재까지 근무일수가 몇일 인지를 구하고, 근무일수가 많은 순서로 출력하세요
-SELECT ename, hiredate, SYSDATE, TRUNC(SYSDATE-hiredate) "근무일수"
-FROM EMP
-ORDER BY TRUNC(SYSDATE-hiredate) DESC;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- 5. 회원 정보 테이블(member) 시퀀스 객체를 사용한 데이터 추가
+INSERT INTO MEMBER VALUES(MEMBER_num.NEXTVAL, 'id', 'name', 100, 170.10, SYSDATE);
+DELETE FROM MEMBER;
 
 
 
